@@ -20,6 +20,27 @@ The script:
 Use `--minimal` to download only the main chat model, or `--no-weights` to skip the downloads.
 Re-running the script is safe: it skips anything already present.
 
+### On Windows (PowerShell)
+
+Windows PowerShell does not understand `&&`, and paths use `\`. One-time prerequisites:
+
+```powershell
+winget install Python.Python.3.11
+winget install Git.Git
+```
+
+Close and reopen PowerShell, then:
+
+```powershell
+cd $HOME
+git clone -b claude/relaxed-archimedes-4lpubr https://github.com/mattersmzansi-design/minimind.git
+cd minimind
+powershell -ExecutionPolicy Bypass -File scripts\setup_cpu.ps1
+```
+
+On Windows, replace `.venv/bin/python` with `.venv\Scripts\python.exe` in the commands below
+(and `../.venv/bin/streamlit` with `..\.venv\Scripts\streamlit.exe`). Use `;` instead of `&&`.
+
 ## 2. Ways to use it
 
 ### Terminal chat
