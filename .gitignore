@@ -3,4 +3,5 @@ __pycache__/
 .DS_Store
 out
 website/
-docs-minimind/
+docs-minimind/.venv/
+scripts/minimind-3/
