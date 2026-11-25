@@ -32,7 +32,16 @@ Run $venvPy @('-m', 'pip', 'install', '-q', '--upgrade', 'pip')
 Write-Host '==> Installing CPU-only PyTorch'
 Run $venvPy @('-m', 'pip', 'install', 'torch==2.6.0', '--index-url', 'https://download.pytorch.org/whl/cpu')
 Write-Host '==> Installing requirements.txt'
-Run $venvPy @('-m', 'pip', 'install', '-r', 'requirements.txt')
+# ujson==5.1.0 has no prebuilt Windows wheel for Python 3.11 and would need
+# Microsoft C++ Build Tools to compile. Nothing in the code imports ujson,
+# so install a newer release that ships Windows wheels instead.
+$req = Join-Path $env:TEMP 'minimind_requirements_win.txt'
+(Get-Content requirements.txt) |
+    Where-Object { $_ -notmatch '^\s*ujson' } |
+    Set-Content -Path $req -Encoding ASCII
+Add-Content -Path $req -Value 'ujson>=5.10' -Encoding ASCII
+Run $venvPy @('-m', 'pip', 'install', '-r', $req)
+Remove-Item $req
 
 if ($NoWeights) { Write-Host '==> Skipping weight downloads'; exit 0 }
 
